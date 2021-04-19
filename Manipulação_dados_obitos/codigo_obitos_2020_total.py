@@ -116,7 +116,7 @@ for i in ls[4:]:
     df.set_index('Distrito Admin residência',inplace=True)
     col_names = []
     for j in df.columns:
-        col_names.append('obitos' + '_' + str(2019) + '_' + 'total' + '_' + j + '_' + str(faixa_etaria[0]) + '_' + str(faixa_etaria[1]) + '_' + 'anos')
+        col_names.append('obitos' + '_' + str(2020) + '_' + 'total' + '_' + j + '_' + str(faixa_etaria[0]) + '_' + str(faixa_etaria[1]) + '_' + 'anos')
     df.set_axis(col_names, axis=1, inplace=True)
     dfs.append(df)
 
