@@ -101,7 +101,7 @@ dfs.append(df_2017_30_39)
 
 #40_inf_anos
 for i in ls[4:]:
-    df = pd.read_csv(rf'C:\Users\guilh\Documents\Apoio_p_18_COVID19_\obitos_total_distrito_2018\obitos_total_{i[0]}_{i[1]}_anos.csv',
+    df = pd.read_csv(rf'C:\Users\guilh\Documents\Apoio_p_18_COVID19_\obitos_total_distrito_2017\obitos_total_{i[0]}_{i[1]}_anos.csv',
                      sep = 'delimiter', encoding = 'Latin1',header = None)
     df = df.iloc[4:101,].reset_index(drop=True)
     df = df.rename(columns={0:'Name'})
