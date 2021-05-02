@@ -1,8 +1,7 @@
 library(tidyverse)
+library(stargazer)
 
 df <- read_csv("Apoio_p_18_COVID19_/dataset_final.csv")
-
-#stargazer(model_m1,model_m2,model_m3,type='text')
 
 #Relação entre variáveis chave
 ggplot(aes(x=log_renda,y=ipvs),data=df) + geom_point()
@@ -152,8 +151,24 @@ stargazer(model_m1, model_m2, model_m3,
           notes.label = "Níveis de significância",
           title = 'Regressão 17',out = "Apoio_p_18_COVID19_/regressoes_17.tex")
 
+model1 <- lm(excedente_50_cap ~ votos_2018_Bolsonaro_1_percentual, data = df_main)
+model2 <- lm(excedente_50_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda, data = df_main)
+model3 <- lm(excedente_50_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
+model4 <- lm(excedente_60_cap ~ votos_2018_Bolsonaro_1_percentual, data = df_main)
+model5 <- lm(excedente_60_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda, data = df_main)
+model6 <- lm(excedente_60_cap~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
+model7 <- lm(excedente_60_votante ~ votos_2018_Bolsonaro_1_percentual, data = df_main)
+model8 <- lm(excedente_60_votante ~ votos_2018_Bolsonaro_1_percentual + log_renda, data = df_main)
+model9 <- lm(excedente_60_votante~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
 
-
+stargazer(model1,model2,model3,model4,model5,model6,model7,model8,model9,
+          dep.var.caption = "Excedente de mortos em 2021",
+          dep.var.labels = c('0-50 anos','0-60 anos','20-60 anos',
+                             '0-50 anos','0-60 anos','20-60 anos',
+                             '0-50 anos','0-60 anos','20-60 anos'),
+          covariate.labels = c("Votos no Bolsonaro no 1º Turno (em %)","Log da Renda","IPVS","Constante"),
+          notes.label = "Níveis de significância",
+          title = 'Regressão 1',out = "Apoio_p_18_COVID19_/regressoes_main_1.tex")
 
 #4º Modelo
 #THRESHOLD = 60_anos
