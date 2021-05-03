@@ -72,6 +72,86 @@ data = data %>% mutate(mortes_21covid_60_cap_cri = mortes_21covid_60_cri /
 data = data %>% mutate(mortes_21covid_50_cap_cri = mortes_21covid_50_cri/ 
                          populacao_50criancas * 100000)
 
+#Manipulações dados sumários
+#Óbitos COVID
+data = data %>% mutate(obitos_2020_COVID_total = obitos_2020_COVID_0_9 +
+                       obitos_2020_COVID_10_19 + obitos_2020_COVID_20_29 +
+                       obitos_2020_COVID_30_39 + obitos_2020_COVID_40_49 +
+                       obitos_2020_COVID_50_59 + obitos_2020_COVID_60_69 +
+                       obitos_2020_COVID_70_inf)
+
+data = data %>% mutate(obitos_2021_COVID_total = obitos_2021_COVID_0_9 +
+                       obitos_2021_COVID_10_19 + obitos_2021_COVID_20_29 +
+                       obitos_2021_COVID_30_39 + obitos_2021_COVID_40_49 +
+                       obitos_2021_COVID_50_59 + obitos_2021_COVID_60_69 +
+                       obitos_2021_COVID_70_inf)
+
+data = data %>% mutate(obitos_2020_COVID_total_cap = obitos_2020_COVID_total /
+                         populacao_2017_total * 100000)
+
+data = data %>% mutate(obitos_2021_COVID_total_cap = obitos_2021_COVID_total /
+                         populacao_2017_total * 100000)
+
+#Casos COVID
+data = data %>% mutate(casos_2020_total = casos_2020_0_9 +
+                         casos_2020_10_19 + casos_2020_20_29 +
+                         casos_2020_30_39 + casos_2020_40_49 +
+                         casos_2020_50_59 + casos_2020_60_69 +
+                         casos_2020_70_inf)
+
+data = data %>% mutate(casos_2021_total = casos_2021_0_9 +
+                         casos_2021_10_19 + casos_2021_20_29 +
+                         casos_2021_30_39 + casos_2021_40_49 +
+                         casos_2021_50_59 + casos_2021_60_69 +
+                         casos_2021_70_inf)
+
+data = data %>% mutate(casos_2020_total_cap = casos_2020_total /
+                         populacao_2017_total * 100000)
+
+data = data %>% mutate(casos_2021_total_cap = casos_2021_total /
+                         populacao_2017_total * 100000)
+
+#Excedente de mortes
+
+data = data %>% mutate(excedente_mortes_total = excedente_mortes_0_9 +
+                         excedente_mortes_10_19 + excedente_mortes_20_29 +
+                         excedente_mortes_30_39 + excedente_mortes_40_49 +
+                         excedente_mortes_50_59 + excedente_mortes_60_69 +
+                         excedente_mortes_70_inf)
+
+data = data %>% mutate(excedente_mortes_total_cap = excedente_mortes_total /
+                         populacao_2017_total * 100000)
+
+#% de Idosos
+
+data = data %>% mutate(populacao_2017_percentagem_idosos = populacao_2017_percentagem_60_69_anos +
+                         populacao_2017_percentagem_70_os_anos)
+
+#DF sumário
+df = data %>% select(Distrito, votos_2018_Bolsonaro_1_percentual, votos_2018_Bolsonaro_2_percentual,
+                     renda,ipvs,populacao_2017_total,casos_2020_total_cap,casos_2021_total_cap,
+                     obitos_2020_COVID_total_cap,obitos_2021_COVID_total_cap,excedente_mortes_total_cap,
+                     populacao_2017_percentagem_idosos)
+
+df = df[order(-df$excedente_mortes_total_cap),]
+
+#to_do = Diminuir os nomes das colunas, adicionar R$ na renda 
+df = df %>% rename('Votos em Bolsonaro 1º Turno (%)' = votos_2018_Bolsonaro_1_percentual,
+                   'Votos em Bolsonaro 2º Turno (%)' = votos_2018_Bolsonaro_2_percentual,
+                   'Renda Média' = renda, 'IPVS' = ipvs, 'População Total' = populacao_2017_total,
+                   'Casos de COVID em 2020 (per capita)' = casos_2020_total_cap,
+                   'Casos de COVID em 2021 (per capita)' = casos_2021_total_cap,
+                   'Óbitos por COVID em 2020 (per capita)' = obitos_2020_COVID_total_cap,
+                   'Óbitos por COVID em 2021 (per capita)' = obitos_2021_COVID_total_cap,
+                   'Excedente de mortes em 2021 (per capita)' = excedente_mortes_total_cap,
+                   'Idosos (%)' = populacao_2017_percentagem_idosos)
+
+df_top = df[1:10,]
+
+stargazer(df_top,summary=FALSE,title = 'Tabela',out = "Apoio_p_18_COVID19_/tabela_sumario_top.tex",
+          rownames = FALSE, digits =  2)
+
+#Threshold para retirarmos distritos de renda média e alta com IPVS maior do que a mediana
 df_ricos <- data %>%
   filter(log_renda >= 8.305727)
 df_ricos_ig <- df_ricos %>%
