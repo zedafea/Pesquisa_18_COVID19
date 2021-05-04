@@ -16,6 +16,7 @@ library(tidyr)
 library(readr)
 library(ggplot2)
 library(stargazer)
+library(stringr)
 
 options(scipen = 999) # disable scientific notation
 
@@ -127,29 +128,49 @@ data = data %>% mutate(excedente_mortes_total_cap = excedente_mortes_total /
 data = data %>% mutate(populacao_2017_percentagem_idosos = populacao_2017_percentagem_60_69_anos +
                          populacao_2017_percentagem_70_os_anos)
 
+#Casos e mortes totais com relação a COVID
+data = data %>% mutate(casos_COVID_total_cap = (casos_2020_total + casos_2021_total)
+                       / populacao_2017_total * 100000)
+
+data = data %>% mutate(obitos_COVID_total_cap = (obitos_2020_COVID_total + obitos_2021_COVID_total)
+                       / populacao_2017_total * 100000)
+
+#Multiplicando por 100 as colunas percentuais
+data = data %>% mutate(votos_2018_Bolsonaro_1_percentual = votos_2018_Bolsonaro_1_percentual * 100,
+                       votos_2018_Bolsonaro_2_percentual = votos_2018_Bolsonaro_2_percentual * 100,
+                       populacao_2017_percentagem_idosos = populacao_2017_percentagem_idosos * 100)
+
 #DF sumário
 df = data %>% select(Distrito, votos_2018_Bolsonaro_1_percentual, votos_2018_Bolsonaro_2_percentual,
-                     renda,ipvs,populacao_2017_total,casos_2020_total_cap,casos_2021_total_cap,
-                     obitos_2020_COVID_total_cap,obitos_2021_COVID_total_cap,excedente_mortes_total_cap,
+                     renda,ipvs,populacao_2017_total,casos_COVID_total_cap,
+                     obitos_COVID_total_cap,excedente_mortes_total_cap,
                      populacao_2017_percentagem_idosos)
 
 df = df[order(-df$excedente_mortes_total_cap),]
 
-#to_do = Diminuir os nomes das colunas, adicionar R$ na renda 
-df = df %>% rename('Votos em Bolsonaro 1º Turno (%)' = votos_2018_Bolsonaro_1_percentual,
-                   'Votos em Bolsonaro 2º Turno (%)' = votos_2018_Bolsonaro_2_percentual,
-                   'Renda Média' = renda, 'IPVS' = ipvs, 'População Total' = populacao_2017_total,
-                   'Casos de COVID em 2020 (per capita)' = casos_2020_total_cap,
-                   'Casos de COVID em 2021 (per capita)' = casos_2021_total_cap,
-                   'Óbitos por COVID em 2020 (per capita)' = obitos_2020_COVID_total_cap,
-                   'Óbitos por COVID em 2021 (per capita)' = obitos_2021_COVID_total_cap,
-                   'Excedente de mortes em 2021 (per capita)' = excedente_mortes_total_cap,
-                   'Idosos (%)' = populacao_2017_percentagem_idosos)
+df['Distrito'] = str_to_title(df$Distrito)
 
-df_top = df[1:10,]
+df$renda = paste("R$",df$renda)
 
+#Renomeando as colunas 
+df = df %>% rename('Bolsonaro 1º T*' = votos_2018_Bolsonaro_1_percentual,
+                   'Bolsonaro 2º T*' = votos_2018_Bolsonaro_2_percentual,
+                   'Renda Média' = renda, 'IPVS' = ipvs, 'Pop. Total' = populacao_2017_total,
+                   'Casos de COVID**' = casos_COVID_total_cap,
+                   'Mortes por COVID**' = obitos_COVID_total_cap,
+                   'Exc. de mortes***' = excedente_mortes_total_cap,
+                   'Idosos *' = populacao_2017_percentagem_idosos)
+#Selecionando o top 10
+df_top = df[1:20,]
+
+#Selecionando o bottom 10
+df_bot = df[77:96,]
+
+#Exportando pra Latex
 stargazer(df_top,summary=FALSE,title = 'Tabela',out = "Apoio_p_18_COVID19_/tabela_sumario_top.tex",
-          rownames = FALSE, digits =  2)
+          rownames = FALSE, digits =  0, column.sep.width = "-5pt", notes = "* = Percentagem ** = Dados per capita com relação aos anos de 2020 e 2021 *** = Inserir fórmula")
+stargazer(df_bot,summary=FALSE,title = 'Tabela',out = "Apoio_p_18_COVID19_/tabela_sumario_bot.tex",
+          rownames = FALSE, digits =  0, column.sep.width = "-5pt", notes = "* = Percentagem ** = Dados per capita com relação aos anos de 2020 e 2021 *** = Inserir fórmula")
 
 #Threshold para retirarmos distritos de renda média e alta com IPVS maior do que a mediana
 df_ricos <- data %>%
