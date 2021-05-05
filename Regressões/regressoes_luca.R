@@ -243,16 +243,28 @@ stargazer(model1, model2, model3,model4,
 
 model1 = lm(mortes_21covid_50_cap_cri ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
 model2 = lm(mortes_21covid_60_cap_cri ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
-model3 = lm(mortes_21covid_50_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
+#model3 = lm(mortes_21covid_50_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
 model4 = lm(mortes_21covid_60_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
 
-stargazer(model1, model2, model3,model4,
+stargazer(model1, model2,model4,
           dep.var.caption = "Mortes de COVID (per capita) em 2021",
-          dep.var.labels = c('0-50 anos','0-60 anos','20-50 anos','20-60 anos'),
-          covariate.labels = c("Votos no Bolsonaro no 1º Turno (em %)","Log da Renda","IPVS","Constante"),
+          dep.var.labels = c('0-50 anos','0-60 anos','20-60 anos'),
+          covariate.labels = c("Votos no Bolsonaro","Log da Renda","IPVS","Constante"),
           notes.label = "Níveis de significância",
           title = 'Regressão 20',out = "Apoio_p_18_COVID19_/regressoes_20.tex")
 
+#Mortes de COVID considerando 96 distritos
+model1 = lm(mortes_21covid_50_cap_cri ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = data)
+model2 = lm(mortes_21covid_60_cap_cri ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = data)
+#model3 = lm(mortes_21covid_50_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df_main)
+model4 = lm(mortes_21covid_60_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = data)
+
+stargazer(model1, model2,model4,
+          dep.var.caption = "Mortes de COVID (per capita) em 2021",
+          dep.var.labels = c('0-50 anos','0-60 anos','20-60 anos'),
+          covariate.labels = c("Votos no Bolsonaro","Log da Renda","IPVS","Constante"),
+          notes.label = "Níveis de significância",
+          title = 'Regressão 20',out = "Apoio_p_18_COVID19_/regressoes_main_5.tex")
 
 data = data %>% mutate(excedente_50 = excedente_mortes_20_29+
                                       excedente_mortes_30_39+
@@ -359,3 +371,15 @@ stargazer(model1,model2,model4,
           covariate.labels = c("Votos no Bolsonaro no 1º Turno (em %)","Log da Renda","IPVS","Constante"),
           notes.label = "Níveis de significância",
           title = 'Regressão 16',out = "Apoio_p_18_COVID19_/regressoes_16.tex")
+
+model1 = lm(segunda_onda ~ votos_2018_Bolsonaro_1_percentual, data = data)
+model2 = lm(segunda_onda ~ votos_2018_Bolsonaro_1_percentual + log_renda, data = data)
+#model3 = lm(segunda_onda ~ votos_2018_Bolsonaro_1_percentual + ipvs, data = data)
+model4 = lm(segunda_onda~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = data)
+
+stargazer(model1,model2,model4,
+          dep.var.caption = "Variável dependente",
+          dep.var.labels = "Segunda onda (2021)",
+          covariate.labels = c("Votos no Bolsonaro","Log da Renda","IPVS","Constante"),
+          notes.label = "Níveis de significância",
+          title = 'Regressão 16',out = "Apoio_p_18_COVID19_/regressoes_main_6.tex")

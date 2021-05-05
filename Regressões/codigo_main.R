@@ -170,6 +170,26 @@ stargazer(model1,model2,model3,model4,model5,model6,model7,model8,model9,
           notes.label = "Níveis de significância",
           title = 'Regressão 1',out = "Apoio_p_18_COVID19_/regressoes_main_1.tex")
 
+#Regressão com todos os distritos
+model1 <- lm(excedente_50_cap ~ votos_2018_Bolsonaro_1_percentual, data = df)
+model2 <- lm(excedente_50_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda, data = df)
+model3 <- lm(excedente_50_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df)
+model4 <- lm(excedente_60_cap ~ votos_2018_Bolsonaro_1_percentual, data = df)
+model5 <- lm(excedente_60_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda, data = df)
+model6 <- lm(excedente_60_cap~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df)
+model7 <- lm(excedente_20_60_cap ~ votos_2018_Bolsonaro_1_percentual, data = df)
+model8 <- lm(excedente_20_60_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda, data = df)
+model9 <- lm(excedente_20_60_cap ~ votos_2018_Bolsonaro_1_percentual + log_renda + ipvs, data = df)
+
+stargazer(model1,model2,model3,model4,model5,model6,model7,model8,model9,
+          dep.var.caption = "Excedente de mortos em 2021",
+          dep.var.labels = c('0-50 anos','0-60 anos','20-60 anos',
+                             '0-50 anos','0-60 anos','20-60 anos',
+                             '0-50 anos','0-60 anos','20-60 anos'),
+          covariate.labels = c("Votos no Bolsonaro no 1º Turno (em %)","Log da Renda","IPVS","Constante"),
+          notes.label = "Níveis de significância",
+          title = 'Regressão 1',out = "Apoio_p_18_COVID19_/regressoes_main_4.tex")
+
 #4º Modelo
 #THRESHOLD = 60_anos
 df['excedente_60'] <- df %>%
